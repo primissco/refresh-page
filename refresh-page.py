@@ -1,26 +1,23 @@
-import time
-from datetime import datetime
+import os, time, sys
 from selenium import webdriver
 from urllib import request
-from pythonping.executor import ResponseList
-from pythonping import ping
 
-url = input("Enter the URL: ")
-refreshrate = int(input("Enter the refresh rate (seconds): "))
-driver = webdriver.Chrome() #you can change your desired browser webdriver by switching out Chrome for Firefox for example (MAKE SURE YOUR HAVE THE PARTICULAR WEBDRIVER INSTALLED) 
-driver.get("https://"+url)
+refreshed_times = 0
+url = str(sys.argv[1])
+timer = int(sys.argv[2])
+driver = webdriver.Firefox() #(Chrome/Firefox) - make sure you have the web driver installed!
 
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-rl = ping(url, size=30, count=10)
-print()
-print("[%s]" % (current_time), "page loaded in %dms" % (rl.rtt_avg_ms))
-print()
+driver.get(url)
 
 while True:
-    time.sleep(refreshrate)
+    time.sleep(timer)
     driver.refresh()
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    rl = ping(url, size=30, count=10)
-    print("[%s]" % (current_time), "page refreshed in %dms" % (rl.rtt_avg_ms))
+
+    refreshed_times = refreshed_times + 1
+
+    os.system("cls" if os.name=="nt" else "clear")
+
+    print(f"{url} refreshes every {timer} seconds")
+    print("refreshed times: ", refreshed_times)
+    print()
+    print("Press CTRL+C or close the browser/terminal window to stop.")
